@@ -1,0 +1,390 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AI Product Review Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: hsl(0, 100%, 100%);
+      padding-top: 100px; /* space for slideshow */
+    }
+
+    /* 🔁 Slideshow Styles */
+    .slideshow-wrapper {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 80px;
+      background: #ffffff;
+      overflow: hidden;
+      z-index: 10;
+      border-bottom: 1px solid #eee;
+    }
+
+    .slideshow-track {
+      display: flex;
+      width: max-content;
+      gap: 30px;
+      animation: scrollLoop 80s linear infinite;
+      align-items: center;
+      padding: 0 20px;
+    }
+
+    .slideshow-track img {
+      height: 50px;
+      flex-shrink: 0;
+      opacity: 0.8;
+      transition: transform 0.3s ease;
+    }
+
+    .slideshow-track img:hover {
+      transform: scale(1.1);
+      opacity: 1;
+    }
+
+    @keyframes scrollLoop {
+      from {
+        transform: translateX(0);
+      }
+      to {
+        transform: translateX(-50%);
+      }
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+      padding: 30px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      color: #333;
+    }
+
+    .header p {
+      color: #666;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .card {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    }
+
+    label {
+      font-weight: 600;
+      margin-bottom: 5px;
+      display: block;
+      color: #444;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 10px;
+      font-size: 15px;
+      margin-bottom: 15px;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .generate-btn {
+      width: 100%;
+      background: linear-gradient(to right, #667eea, #764ba2);
+      color: white;
+      padding: 14px;
+      border: none;
+      font-size: 16px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .generate-btn:hover {
+      background: #5a67d8;
+    }
+
+    .review-output {
+      background: #f9f9f9;
+      border: 2px solid #e1e5e9;
+      border-radius: 12px;
+      padding: 15px;
+      min-height: 150px;
+      white-space: pre-wrap;
+      color: #333;
+    }
+
+    .output-actions {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .action-btn {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      background: white;
+      color: #667eea;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .action-btn:hover {
+      background: #667eea;
+      color: white;
+    }
+
+    .saved-reviews {
+      margin-top: 40px;
+    }
+
+    .saved-review-item {
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      background: #f0f4ff;
+      margin-bottom: 15px;
+      border-radius: 10px;
+    }
+
+    .spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid #ccc;
+      border-top: 4px solid #667eea;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: auto;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .loading {
+      display: none;
+      text-align: center;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 🔁 Slideshow -->
+  <div class="slideshow-wrapper">
+    <div class="slideshow-track">
+      <!-- Images Set 1 + Duplicated for Infinite Loop -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+      <img src="https://1000logos.net/wp-content/uploads/2021/02/Flipkart-logo.png" alt="Flipkart">
+      <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart">
+      <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Payment">
+      <img src="https://cdn-icons-png.flaticon.com/512/1049/1049856.png" alt="Bag">
+      <img src="https://cdn-icons-png.flaticon.com/512/891/891419.png" alt="Shop">
+      <img src="https://cdn-icons-png.flaticon.com/512/2784/2784445.png" alt="Mobile">
+      <img src="https://cdn-icons-png.flaticon.com/512/891/891462.png" alt="Store">
+      <!-- Duplicate -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+      <img src="https://1000logos.net/wp-content/uploads/2021/02/Flipkart-logo.png" alt="Flipkart">
+      <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart">
+      <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Payment">
+      <img src="https://cdn-icons-png.flaticon.com/512/1049/1049856.png" alt="Bag">
+      <img src="https://cdn-icons-png.flaticon.com/512/891/891419.png" alt="Shop">
+      <img src="https://cdn-icons-png.flaticon.com/512/2784/2784445.png" alt="Mobile">
+      <img src="https://cdn-icons-png.flaticon.com/512/891/891462.png" alt="Store">
+      <!-- Duplicate -->
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+      <img src="https://1000logos.net/wp-content/uploads/2021/02/Flipkart-logo.png" alt="Flipkart">
+      <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart">
+      <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Payment">
+      <img src="https://cdn-icons-png.flaticon.com/512/1049/1049856.png" alt="Bag">
+      <img src="https://cdn-icons-png.flaticon.com/512/891/891419.png" alt="Shop">
+      <img src="https://cdn-icons-png.flaticon.com/512/2784/2784445.png" alt="Mobile">
+      <img src="https://cdn-icons-png.flaticon.com/512/891/891462.png" alt="Store">
+    </div>
+  </div>
+
+  <!-- Main App -->
+  <div class="container">
+    <div class="header">
+      <h1>🤖 AI Product Review Generator</h1>
+      <p>Create amazing product reviews using AI</p>
+    </div>
+
+    <div class="main-content">
+      <!-- Form -->
+      <div class="card">
+        <form id="reviewForm">
+          <label>Product Name</label>
+          <input type="text" name="productName" required placeholder="e.g., iPhone 15 Pro" />
+
+          <label>Category</label>
+          <select name="category" required>
+            <option value="">Select Category</option>
+            <option value="Electronics">Electronics</option>
+            <option value="Clothing">Clothing</option>
+            <option value="Books">Books</option>
+            <option value="Home & Garden">Home & Garden</option>
+            <option value="Food">Food</option>
+          </select>
+
+          <label>Key Features</label>
+          <textarea name="features" placeholder="Main features..."></textarea>
+
+          <label>Pros</label>
+          <textarea name="pros" placeholder="What’s good about it?"></textarea>
+
+          <label>Cons</label>
+          <textarea name="cons" placeholder="What could be better?"></textarea>
+
+          <label>Rating</label>
+          <input type="number" name="rating" min="1" max="5" step="0.1" placeholder="4.5" />
+
+          <label>Review Tone</label>
+          <select name="tone" required>
+            <option value="professional">Professional</option>
+            <option value="casual">Casual</option>
+            <option value="enthusiastic">Enthusiastic</option>
+            <option value="balanced">Balanced</option>
+            <option value="detailed">Detailed</option>
+          </select>
+
+          <button type="submit" class="generate-btn">Generate Review</button>
+        </form>
+      </div>
+
+      <!-- Output -->
+      <div class="card">
+        <div class="loading" id="loading"><div class="spinner"></div></div>
+        <div class="review-output" id="reviewOutput">Your review will appear here...</div>
+        <div class="output-actions">
+          <button class="action-btn" onclick="copyReview()">Copy</button>
+          <button class="action-btn" onclick="saveReview()">Save</button>
+          <button class="action-btn" onclick="downloadReview()">Download</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Saved Reviews -->
+    <div class="saved-reviews" id="savedReviewsList">
+      <h2>Saved Reviews</h2>
+    </div>
+  </div>
+
+  <!-- JavaScript -->
+  <script>
+    let currentReview = '';
+    let savedReviews = [];
+
+    const templates = {
+      professional: "The {category} product {productName} offers {features}. Pros: {pros}. Cons: {cons}. Overall rating: {rating} stars.",
+      casual: "Tried the {productName} recently — {features}. Loved: {pros}. Could be better: {cons}. I'd rate it {rating} stars!",
+      enthusiastic: "Absolutely loved the {productName}! With {features}, it's a must-have in {category}. Pros: {pros}, Cons: {cons}. Rated: {rating} stars!",
+      balanced: "After using the {productName}, here's what I think: {features}. Good: {pros}. Not so good: {cons}. I give it {rating} stars.",
+      detailed: "{productName} Review:\n\nCategory: {category}\nFeatures: {features}\nPros: {pros}\nCons: {cons}\nRating: {rating}/5"
+    };
+
+    document.getElementById('reviewForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const formData = new FormData(this);
+      const data = Object.fromEntries(formData.entries());
+      const template = templates[data.tone];
+
+      currentReview = template
+        .replace(/{productName}/g, data.productName)
+        .replace(/{category}/g, data.category)
+        .replace(/{features}/g, data.features || "various features")
+        .replace(/{pros}/g, data.pros || "strong performance")
+        .replace(/{cons}/g, data.cons || "minor issues")
+        .replace(/{rating}/g, data.rating || "4.0");
+
+      document.getElementById('loading').style.display = 'block';
+      document.getElementById('reviewOutput').style.display = 'none';
+
+      setTimeout(() => {
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('reviewOutput').textContent = currentReview;
+        document.getElementById('reviewOutput').style.display = 'block';
+      }, 1500);
+    });
+
+    function copyReview() {
+      if (currentReview) {
+        navigator.clipboard.writeText(currentReview);
+        alert("Review copied!");
+      }
+    }
+
+    function saveReview() {
+      if (currentReview) {
+        savedReviews.unshift(currentReview);
+        displaySavedReviews();
+      }
+    }
+
+    function downloadReview() {
+      if (currentReview) {
+        const blob = new Blob([currentReview], { type: 'text/plain' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'review.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+    }
+
+    function displaySavedReviews() {
+      const container = document.getElementById('savedReviewsList');
+      container.innerHTML = '<h2>Saved Reviews</h2>';
+      savedReviews.forEach(review => {
+        const div = document.createElement('div');
+        div.className = 'saved-review-item';
+        div.textContent = review;
+        container.appendChild(div);
+      });
+    }
+  </script>
+</body>
+</html>

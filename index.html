@@ -1,0 +1,156 @@
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login | AI Review Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      color: white;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      background-color: #000;
+    }
+
+    /* === Background Slideshow === */
+    .slideshow {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      width: 1600%; /* 16 images x 100vw */
+      display: flex;
+      animation: slideRight 120s linear infinite;
+      z-index: -1;
+    }
+
+    .slideshow img {
+      width: 100vw;
+      height: 100vh;
+      object-fit: contain;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    @keyframes slideRight {
+      0% {
+        transform: translateX(-800vw); /* Start from far left */
+      }
+      100% {
+        transform: translateX(0); /* Move to right corner */
+      }
+    }
+
+    /* === Login Box === */
+    .login-box {
+      background-color: rgba(0, 0, 0, 0.6);
+      padding: 40px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      z-index: 1;
+    }
+
+    .login-box h1 {
+      font-size: 28px;
+      margin-bottom: 25px;
+      animation: fadeIn 1.5s ease forwards;
+      opacity: 0;
+    }
+
+    .animated-btn {
+      background-color: #ff6ec4;
+      color: white;
+      padding: 15px 40px;
+      border: none;
+      border-radius: 50px;
+      font-size: 18px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.3s ease, background-color 0.4s ease;
+      animation: bounceIn 1s ease forwards;
+    }
+
+    .animated-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
+    }
+
+    @keyframes fadeIn {
+      to {
+        opacity: 1;
+      }
+    }
+
+    @keyframes bounceIn {
+      0% {
+        opacity: 0;
+        transform: scale(0.8);
+      }
+      60% {
+        opacity: 1;
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Background Slideshow -->
+  <div class="slideshow">
+    <!-- First set -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+    <img src="https://1000logos.net/wp-content/uploads/2021/02/Flipkart-logo.png" alt="Flipkart">
+    <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart">
+    <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Payment">
+    <img src="https://cdn-icons-png.flaticon.com/512/1049/1049856.png" alt="Bag">
+    <img src="https://cdn-icons-png.flaticon.com/512/891/891419.png" alt="Shop">
+    <img src="https://cdn-icons-png.flaticon.com/512/2784/2784445.png" alt="Mobile">
+    <img src="https://cdn-icons-png.flaticon.com/512/891/891462.png" alt="Store">
+
+    <!-- Repeat set for smooth loop -->
+    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Amazon_logo.svg" alt="Amazon">
+    <img src="https://1000logos.net/wp-content/uploads/2021/02/Flipkart-logo.png" alt="Flipkart">
+    <img src="https://cdn-icons-png.flaticon.com/512/1170/1170678.png" alt="Cart">
+    <img src="https://cdn-icons-png.flaticon.com/512/3144/3144456.png" alt="Payment">
+    <img src="https://cdn-icons-png.flaticon.com/512/1049/1049856.png" alt="Bag">
+    <img src="https://cdn-icons-png.flaticon.com/512/891/891419.png" alt="Shop">
+    <img src="https://cdn-icons-png.flaticon.com/512/2784/2784445.png" alt="Mobile">
+    <img src="https://cdn-icons-png.flaticon.com/512/891/891462.png" alt="Store">
+  </div>
+
+  <!-- Login Box -->
+  <div class="login-box">
+    <h1>Welcome to AI Review Generator</h1>
+    <button class="animated-btn" id="clickButton">Click Me</button>
+  </div>
+
+  <!-- Button Color & Click Redirect -->
+  <script>
+    const button = document.getElementById("clickButton");
+    const colors = ["#ff6ec4", "#42e695", "#7873f5", "#fcb045", "#30cfd0", "#f5576c", "#4facfe", "#43e97b", "#fa709a"];
+
+    button.addEventListener("mousemove", () => {
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+      button.style.backgroundColor = randomColor;
+    });
+
+    button.onclick = () => {
+      window.location.href = "review.html";
+    };
+  </script>
+</body>
+</html>
